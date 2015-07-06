@@ -13,13 +13,18 @@ $(document).ready(function() {
       this.sColumns.push(new SColumn(i));
       this.sBoxes.push(new SBox(i));
     }
+    this.sGroups = [].concat(this.sRows).concat(this.sColumns).concat(this.sBoxes);
   }
 
   //Sudoku Cell object
   function SCell(num) {
+    //properties
     this.sRow = Math.floor(num/9);
     this.sColumn = (num+9)%9;
     this.sBox = 3 * Math.floor(this.sRow/3) + Math.floor(this.sColumn/3);
+    this.possibles = [1,2,3,4,5,6,7,8,9];
+
+    //
     var makeStr = "";
     if (this.sBox%2 !== 0) {
       makeStr = "<input id='" + num + "' class='square square-offset' ></input>";
@@ -28,6 +33,7 @@ $(document).ready(function() {
       makeStr = "<input id='" + num + "' class='square' ></input>";
     }
     $(".board").append(makeStr);
+
   }
   //Sudoku Row object
   function SRow(num) {
