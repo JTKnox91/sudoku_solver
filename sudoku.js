@@ -63,6 +63,14 @@ $(document).ready(function() {
       } 
     }
   }
-
+  
+  //initiate puzzle board
   var grid = new SGrid();
+
+  //listen for user inputs
+  var reportInput = function(input) {
+    grid.sCells[input.attr(id)].setValue(input.val());
+  }
+  $(".board").on("keyup", "input", reportInput);
+
 });
