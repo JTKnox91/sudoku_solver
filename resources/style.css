@@ -81,3 +81,25 @@ header, footer {
 .main {
 	background: #d8d3bc;
 }
+
+/****************************
+Puzzle Board
+****************************/
+.board {
+	height: 450px;
+	margin: auto;
+	width: 450px;
+}
+
+.square {
+	background: white;
+	border: 1px;
+	display: inline-block;
+	height: 48px;
+	width: 48px;
+
+}
+
+.square-offset {
+	background: #bab9b8;
+}
