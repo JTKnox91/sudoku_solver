@@ -36,6 +36,8 @@ $(document).ready(function() {
 
     //methods
     this.alertGroups = function(value) {};
+
+    //
     this.setValue = function(value) {
       this.solved = value;
       this.possibles = [];
@@ -57,14 +59,14 @@ $(document).ready(function() {
   function SRow(num) {
     this.sCells = [];
     for (var i = 0; i < 9; i++) {
-      this.sCells.push(num+i);
+      this.sCells.push(grid.sCells[num+i]);
     }
   }
   //Sudoku sColumn object
   function SColumn(num) {
     this.sCells = [];
     for(var i = 0; i < 9; i++) {
-      this.sCells.push(num + 9*i);
+      this.sCells.push(grid.sCells[num + 9*i]);
     }
   }
   //Sudoku Box object
@@ -73,7 +75,7 @@ $(document).ready(function() {
     var firstsCell = 9 * Math.floor(num/3) + 3 * num%3;
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
-        this.sCells.push(firstsCell + 9*i + j);
+        this.sCells.push(grid.sCells[firstsCell + 9*i + j]);
       } 
     }
   }
@@ -85,6 +87,7 @@ $(document).ready(function() {
   var reportInput = function() {
     grid.sCells[$(this).attr("id")].setValue($(this).val());
   };
+  //listing for user inputs
   $(".board").on("keyup", "input", reportInput);
 
 });
