@@ -18,13 +18,17 @@ $(document).ready(function() {
 
   //Sudoku Cell object
   function SCell(num) {
-    //properties
+    //attributes
     this.sRow = Math.floor(num/9);
     this.sColumn = (num+9)%9;
     this.sBox = 3 * Math.floor(this.sRow/3) + Math.floor(this.sColumn/3);
     this.possibles = [1,2,3,4,5,6,7,8,9];
 
-    //
+    //methods
+    this.alert = function(value) {};
+    this.setValue = function(value) {};
+
+    //html instructions
     var makeStr = "";
     if (this.sBox%2 !== 0) {
       makeStr = "<input id='" + num + "' class='square square-offset' ></input>";
