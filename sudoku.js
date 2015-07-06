@@ -1,3 +1,4 @@
+$(document).ready(function() {
   //Sudoku Grid object
   function SGrid() {
     this.sCells = [];
@@ -44,3 +45,4 @@
       } 
     }
   }
+});
