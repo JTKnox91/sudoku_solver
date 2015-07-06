@@ -99,6 +99,11 @@ Puzzle Board
 	display: inline-block;
 	height: 48px;
 	width: 48px;
+	text-align: center;
+	font-size: 40px;
+	font-family: arial;
+	vertical-align: middle;
+	font-weight: bold;
 
 }
 
