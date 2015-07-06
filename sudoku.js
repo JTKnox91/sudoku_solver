@@ -19,14 +19,19 @@ $(document).ready(function() {
   //Sudoku Cell object
   function SCell(num) {
     //attributes
+    this.solved = false; //when solved, replaced with a number
     this.sRow = Math.floor(num/9);
     this.sColumn = (num+9)%9;
     this.sBox = 3 * Math.floor(this.sRow/3) + Math.floor(this.sColumn/3);
     this.possibles = [1,2,3,4,5,6,7,8,9];
 
     //methods
-    this.alert = function(value) {};
-    this.setValue = function(value) {};
+    this.alertGroups = function(value) {};
+    this.setValue = function(value) {
+      this.solved = value;
+      this.possibles = [];
+      this.alertGroups(value);
+    };
 
     //html instructions
     var makeStr = "";
@@ -67,10 +72,10 @@ $(document).ready(function() {
   //initiate puzzle board
   var grid = new SGrid();
 
-  //listen for user inputs
-  var reportInput = function(input) {
-    grid.sCells[input.attr(id)].setValue(input.val());
-  }
+  //helps translate between element ids and array indexes.
+  var reportInput = function() {
+    grid.sCells[$(this).attr("id")].setValue($(this).val());
+  };
   $(".board").on("keyup", "input", reportInput);
 
 });
