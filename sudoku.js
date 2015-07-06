@@ -1,6 +1,7 @@
 $(document).ready(function() {
   //Sudoku Grid object
   function SGrid() {
+    //attribute assembly
     this.sCells = [];
     this.sRows = [];
     this.sColumns = [];
@@ -14,11 +15,19 @@ $(document).ready(function() {
       this.sBoxes.push(new SBox(i));
     }
     this.sGroups = [].concat(this.sRows).concat(this.sColumns).concat(this.sBoxes);
+
+    //methods
+    this.updateBoard = function() {
+      this.sCells.forEach(function(cell) {
+        $("#" + cell.cellId).val(cell.solved || "");
+      });
+    };
   }
 
   //Sudoku Cell object
   function SCell(num) {
     //attributes
+    this.cellId = num;
     this.solved = false; //when solved, replaced with a number
     this.sRow = Math.floor(num/9);
     this.sColumn = (num+9)%9;
