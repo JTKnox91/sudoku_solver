@@ -4,14 +4,14 @@ $(document).ready(function() {
     this.sCells = [];
     this.sRows = [];
     this.sColumns = [];
-    this.boxes = [];
+    this.sBoxes = [];
     for (var i = 0; i < 81; i++) {
       this.sCells.push(new SCell(i));
     }
     for (var i = 0; i < 9; i++) {
       this.sRows.push(new SRow(i));
       this.sColumns.push(new SColumn(i));
-      this.boxes.push(new SBox(i));
+      this.sBoxes.push(new SBox(i));
     }
   }
 
@@ -19,24 +19,32 @@ $(document).ready(function() {
   function SCell(num) {
     this.sRow = Math.floor(num/9);
     this.sColumn = (num+9)%9;
-    this.box = 3 * Math.floor(this.sRow/3) + Math.floor(this.sColumn/3);
+    this.sBox = 3 * Math.floor(this.sRow/3) + Math.floor(this.sColumn/3);
+    var makeStr = "";
+    if (this.sBox%2 !== 0) {
+      makeStr = "<input id='" + num + "' class='square square-offset' ></input>";
+    }
+    else {
+      makeStr = "<input id='" + num + "' class='square' ></input>";
+    }
+    $(".board").append(makeStr);
   }
   //Sudoku Row object
   function SRow(num) {
     this.sCells = [];
     for (var i = 0; i < 9; i++) {
-      sCells.push(num+i);
+      this.sCells.push(num+i);
     }
   }
   //Sudoku sColumn object
   function SColumn(num) {
     this.sCells = [];
     for(var i = 0; i < 9; i++) {
-      sCells.push(num + 9*i);
+      this.sCells.push(num + 9*i);
     }
   }
   //Sudoku Box object
-  function Box(num) {
+  function SBox(num) {
     this.sCells = [];
     var firstsCell = 9 * Math.floor(num/3) + 3 * num%3;
     for (var i = 0; i < 3; i++) {
@@ -45,4 +53,6 @@ $(document).ready(function() {
       } 
     }
   }
+
+  var grid = new SGrid();
 });
