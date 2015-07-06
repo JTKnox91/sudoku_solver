@@ -49,3 +49,35 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+/****************************
+Grid Size and Align
+****************************/
+.container {
+	display: block;
+	width: 1000px;
+	margin: 0 auto;
+}
+
+header, footer {
+	height: 100px;
+}
+
+.main {
+	height: 600px;
+}
+
+/****************************
+Block Coloring
+****************************/
+body {
+	background: black;
+}
+
+header, footer {
+	background: #3f3c2f;
+}
+
+.main {
+	background: #d8d3bc;
+}
