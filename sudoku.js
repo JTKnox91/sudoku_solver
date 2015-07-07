@@ -1,7 +1,12 @@
 $(document).ready(function() {
-  //Sudoku Grid object
+
+
+  /****************************
+  Sudoku Grid Object
+  ****************************/
+  
   function SGrid() {
-    //attribute assembly
+    /*GRID ATTRIBUTES*********/
     this.sCells = [];
     this.sRows = [];
     this.sColumns = [];
@@ -16,7 +21,7 @@ $(document).ready(function() {
     }
     this.sGroups = [].concat(this.sRows).concat(this.sColumns).concat(this.sBoxes);
 
-    //methods
+    /*GRID METHODS************/
     this.updateBoard = function() {
       this.sCells.forEach(function(cell) {
         $("#" + cell.cellId).val(cell.solved || "");
@@ -24,9 +29,14 @@ $(document).ready(function() {
     };
   }
 
-  //Sudoku Cell object
+
+  /****************************
+  Sudoku Cell Object
+  ****************************/
+  
   function SCell(num) {
-    //attributes
+    
+    /*CELL ATTRIBUTES*********/
     this.cellId = num;
     this.solved = false; //when solved, replaced with a number
     this.sRow = Math.floor(num/9);
@@ -34,42 +44,52 @@ $(document).ready(function() {
     this.sBox = 3 * Math.floor(this.sRow/3) + Math.floor(this.sColumn/3);
     this.possibles = [1,2,3,4,5,6,7,8,9];
 
-    //methods
+    /*CELL METHODS************/
+    /*alertGroups() informs groups that this cell belongs to that this cell value
+    has been solved, and other cells in the groups should remove that value
+    from their possibilties.*/
     this.alertGroups = function(value) {};
 
-    //
+    /*setValue() gives this cell a solved value, removes all possibles from
+    and calls alertGroups to notify parent groups of the solve.*/
     this.setValue = function(value) {
       this.solved = value;
       this.possibles = [];
       this.alertGroups(value);
     };
 
-    //html instructions
-    var makeStr = "";
-    if (this.sBox%2 !== 0) {
-      makeStr = "<input id='" + num + "' class='square square-offset' ></input>";
-    }
-    else {
-      makeStr = "<input id='" + num + "' class='square' ></input>";
-    }
+    /*HTML CONSTRUCTION*******/
+    /*This makes an <input> element with the ID of num, and class of 'square',
+    and appends it to the board.
+    If the cell belongs to one of the 4 side boxes, andadditional class of
+    'square-offset' is added to help distinguish the 3x3 boxes*/
+    var makeStr = "<input id='" + num + "' class='square' ></input>";
     $(".board").append(makeStr);
-
+    if (this.sBox%2 !== 0) {
+      $("#" + num).addClass("square-offset");
+    }
   }
-  //Sudoku Row object
+
+
+  /****************************
+  Sudoku Group Objects
+  ****************************/
+
+  /*ROWS**********************/
   function SRow(num) {
     this.sCells = [];
     for (var i = 0; i < 9; i++) {
       this.sCells.push(grid.sCells[num+i]);
     }
   }
-  //Sudoku sColumn object
+  /*COLUMNS*******************/
   function SColumn(num) {
     this.sCells = [];
     for(var i = 0; i < 9; i++) {
       this.sCells.push(grid.sCells[num + 9*i]);
     }
   }
-  //Sudoku Box object
+  /*BOXES*********************/
   function SBox(num) {
     this.sCells = [];
     var firstsCell = 9 * Math.floor(num/3) + 3 * num%3;
