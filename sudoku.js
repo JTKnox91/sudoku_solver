@@ -68,7 +68,11 @@ $(document).ready(function() {
     /*alertGroups() informs groups that this cell belongs to that this cell value
     has been solved, and other cells in the groups should remove that value
     from their possibilties.*/
-    this.alertGroups = function(value) {};
+    this.alertGroups = function(value) {
+      this.sRow.removeAllPossibles();
+      this.sColumn.removeAllPossibles();
+      this.sBox.removeAllPossibles();
+    };
 
     /*setValue() gives this cell a solved value, removes all possibles from
     and calls alertGroups to notify parent groups of the solve.*/
@@ -79,7 +83,11 @@ $(document).ready(function() {
     };
 
     /*removePossible() removes a value from this cells array of possible values*/
-    this.removePossible = function(value) {};
+    this.removePossible = function(value) {
+      this.possibles = this.possibles.filter(function(possible) {
+        return possible !== value;
+      });
+    };
 
     /*HTML CONSTRUCTION*******/
 
