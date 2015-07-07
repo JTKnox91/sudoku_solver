@@ -6,7 +6,9 @@ $(document).ready(function() {
   ****************************/
   
   function SGrid() {
+
     /*GRID ATTRIBUTES*********/
+
     this.sCells = [];
     this.sRows = [];
     this.sColumns = [];
@@ -22,6 +24,8 @@ $(document).ready(function() {
     this.sGroups = [].concat(this.sRows).concat(this.sColumns).concat(this.sBoxes);
 
     /*GRID METHODS************/
+    /*updateBoard() is effectively a screen refresh. Any cell with a
+    solved value will have its value entered on the board.*/
     this.updateBoard = function() {
       this.sCells.forEach(function(cell) {
         $("#" + cell.cellId).val(cell.solved || "");
@@ -37,6 +41,7 @@ $(document).ready(function() {
   function SCell(num) {
     
     /*CELL ATTRIBUTES*********/
+
     this.cellId = num;
     this.solved = false; //when solved, replaced with a number
     this.sRow = Math.floor(num/9);
@@ -45,6 +50,7 @@ $(document).ready(function() {
     this.possibles = [1,2,3,4,5,6,7,8,9];
 
     /*CELL METHODS************/
+
     /*alertGroups() informs groups that this cell belongs to that this cell value
     has been solved, and other cells in the groups should remove that value
     from their possibilties.*/
@@ -58,7 +64,11 @@ $(document).ready(function() {
       this.alertGroups(value);
     };
 
+    /*removePossible() removes a value from this cells array of possible values*/
+    this.removePossible = function(value) {};
+
     /*HTML CONSTRUCTION*******/
+
     /*This makes an <input> element with the ID of num, and class of 'square',
     and appends it to the board.
     If the cell belongs to one of the 4 side boxes, andadditional class of
@@ -79,6 +89,7 @@ $(document).ready(function() {
     this.sCells = cellArr;
 
     /*GROUP METHODS***********/
+    this.removeAllPossibles = function(value) {};
 
   }
 
@@ -109,15 +120,24 @@ $(document).ready(function() {
     }
     return new SGroup(myCells);
   }
-  
-  //initiate puzzle board
+
+
+  /****************************
+  Initiallizing and Listening
+  ****************************/
   var grid = new SGrid();
 
-  //helps translate between element ids and array indexes.
+  /*reportInput() will be called from within the board event listener.
+  It calls the the .setValue() of a cell after its corresponding html element
+  has be modified.*/
   var reportInput = function() {
     grid.sCells[$(this).attr("id")].setValue($(this).val());
   };
-  //listing for user inputs
+  /*Listen for any input in a sudoku square*/
   $(".board").on("keyup", "input", reportInput);
+
+  /****************************
+  Actual Solving
+  ****************************/
 
 });
