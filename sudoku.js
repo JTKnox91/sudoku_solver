@@ -13,17 +13,31 @@ $(document).ready(function() {
     this.sRows = [];
     this.sColumns = [];
     this.sBoxes = [];
+
+    /*Construct all cells.*/
     for (var i = 0; i < 81; i++) {
       this.sCells.push(new SCell(i));
     }
+
+    /*Construct all groups*/
     for (var i = 0; i < 9; i++) {
       this.sRows.push(new SRow(i));
       this.sColumns.push(new SColumn(i));
       this.sBoxes.push(new SBox(i));
     }
+    /*Consolidate groups into a single array for convenience*/
     this.sGroups = [].concat(this.sRows).concat(this.sColumns).concat(this.sBoxes);
 
+    /*In cells, replace index numbers for groups with pointers to the actual group objects.
+    (Could not do this in constructor because cells with made before groups.)*/
+    this.sCells.forEach(function(thisCell) {
+      thisCell.sRow = grid.sRows[thisCell.sRow];
+      thisCell.sColumn = grid.sColumns[thisCell.sColumn];
+      thisCell.sBox = grid.sBoxes[thisCell.sBox];
+    });
+
     /*GRID METHODS************/
+
     /*updateBoard() is effectively a screen refresh. Any cell with a
     solved value will have its value entered on the board.*/
     this.updateBoard = function() {
