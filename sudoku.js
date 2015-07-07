@@ -74,30 +74,40 @@ $(document).ready(function() {
   /****************************
   Sudoku Group Objects
   ****************************/
+  function SGroup(cellArr) {
+    /*GROUP ATTRIBUTES********/
+    this.sCells = cellArr;
+
+    /*GROUP METHODS***********/
+
+  }
 
   /*ROWS**********************/
   function SRow(num) {
-    this.sCells = [];
+    var myCells = [];
     for (var i = 0; i < 9; i++) {
-      this.sCells.push(grid.sCells[num+i]);
+      myCells.push(grid.sCells[num+i]);
     }
+    return new SGroup(myCells);
   }
   /*COLUMNS*******************/
   function SColumn(num) {
-    this.sCells = [];
+    var myCells = [];
     for(var i = 0; i < 9; i++) {
-      this.sCells.push(grid.sCells[num + 9*i]);
+      myCells.push(grid.sCells[num + 9*i]);
     }
+    return new SGroup(myCells);
   }
   /*BOXES*********************/
   function SBox(num) {
-    this.sCells = [];
-    var firstsCell = 9 * Math.floor(num/3) + 3 * num%3;
+    var myCells = [];
+    var firstCell = 9 * Math.floor(num/3) + 3 * num%3;
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
-        this.sCells.push(grid.sCells[firstsCell + 9*i + j]);
+        myCells.push(grid.sCells[firstCell + 9*i + j]);
       } 
     }
+    return new SGroup(myCells);
   }
   
   //initiate puzzle board
