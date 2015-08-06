@@ -196,5 +196,69 @@ $(document).ready(function() {
   /****************************
   Actual Solving
   ****************************/
+  //a way to track whether a change was made during a solving step
+  SGrid.prototype.hasChanged = false;
+
+  /*ONLY ONE POSSIBILITY IN CELL*/
+  SGrid.prototype.onlyPossInCell = function() {
+    //for each cell in the grid...
+    _.each(this.sCells, function(thisCell) {
+      //if the cell only knows of one possible value for itself...
+      if (thisCell.possibles.length === 1) {
+        this.hasChanged = true;
+        //become solved at that value.
+        thisCell.setValue(thisCell.possibles[0]);
+      }
+    });
+  };
+
+  /*ONLY ONE POSSIBILITY IN GROUP*/
+  SGrid.prototype.onlyPossInGroup = function() {
+    //for each row, col, or box in the grid...
+    _.each(this.sGroups, function(thisGroup) {
+      //get a list for each value of all cells in the group that can possibly hold that value.
+      var possibles = thisGroup.getAllPossibles();
+      //for each possible value...
+      for (var value in possibles) {
+        //if only one cell can hold that value...
+        if (possibles[value].length === 1) {
+          this.hasChanged = true;
+          //solve that cell at that value
+          possibles[value][0].setValue(value);
+        }
+      }
+    });
+  };
+
+  /*OVERLAPPING PARENTS FOR ONE TYPE OF POSSIBLE*/
+  //tba
+
+  /*TWINS (AND TRIPLETS, ETC...)*/
+  //tba
+
+  /*GUESS AND CHECK*/
+  //tba
+
+  SGrid.prototype.solve = function() {
+    //note the recursive calls, they are there to avoid running the expensive solving methods more than needed
+    this.onlyPossInCell();
+    if (this.hasChanged) {
+      this.updateBoard();
+      
+    }
+    else {
+      this.onlyPossInGroup();
+      if (this.hasChanged) {
+        this.updateBoard();
+        this.solve();
+      }
+      else {
+        //call the overlapping parents step;
+          //call the twins step
+           //call the guess and check step
+            return;
+      }
+    }
+  };
 
 });
