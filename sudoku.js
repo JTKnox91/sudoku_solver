@@ -93,9 +93,9 @@ $(document).ready(function() {
 
     /*This makes an <input> element with the ID of num, and class of 'square',
     and appends it to the board.
-    If the cell belongs to one of the 4 side boxes, andadditional class of
+    If the cell belongs to one of the 4 side boxes, and additional class of
     'square-offset' is added to help distinguish the 3x3 boxes*/
-    var makeStr = "<input id='" + num + "' class='square' ></input>";
+    var makeStr = "<input id='" + num + "' class='square'></input>";
     $(".board").append(makeStr);
     if (this.sBox%2 !== 0) {
       $("#" + num).addClass("square-offset");
@@ -111,7 +111,42 @@ $(document).ready(function() {
     this.sCells = cellArr;
 
     /*GROUP METHODS***********/
-    this.removeAllPossibles = function(value) {};
+    /*This should be called from a child cell that recently solved value.
+    Will inform all cells in the group to remove 'value" from their list
+    of possible values*/
+    this.removeAllPossibles = function(value) {
+      sCells.forEach(function(thisCell) {
+        thisCell.removePossible(value);
+      });
+    };
+
+    /*Returns an objects with keys 1-9, with each key holding the cells
+    that still have that key as a possible value.
+    Useful for solving puzzle, specifically finding a cell that can be 
+    the only remaining holder a certain possible value*/
+    this.getAllPossibles = function() {
+      var allPossibles = {
+        '1': [],
+        '2': [],
+        '3': [],
+        '4': [],
+        '5': [],
+        '6': [],
+        '7': [],
+        '8': [],
+        '9': []
+      };
+
+      for (var value in allPossibles) {
+        sCells.forEach(function(thisCell) {
+          if (_.containts(thisCell.possibles, value)) {
+            allPossibles[value].push(thisCell);
+          }
+        });
+      }
+
+      return allPossibles;
+    };
 
   }
 
