@@ -112,3 +112,11 @@ Puzzle Board
 .square-offset {
 	background: #bab9b8;
 }
+
+/****************************
+Buttons
+****************************/
+.btn:hover {
+	color: white;
+	cursor: pointer;
+}
