@@ -21,9 +21,9 @@ $(document).ready(function() {
 
     /*Construct all groups*/
     for (var i = 0; i < 9; i++) {
-      this.sRows.push(new SRow(i));
-      this.sColumns.push(new SColumn(i));
-      this.sBoxes.push(new SBox(i));
+      this.sRows.push(new SRow(i, this));
+      this.sColumns.push(new SColumn(i, this));
+      this.sBoxes.push(new SBox(i, this));
     }
     /*Consolidate groups into a single array for convenience*/
     this.sGroups = [].concat(this.sRows).concat(this.sColumns).concat(this.sBoxes);
@@ -31,10 +31,10 @@ $(document).ready(function() {
     /*In cells, replace index numbers for groups with pointers to the actual group objects.
     (Could not do this in constructor because cells with made before groups.)*/
     this.sCells.forEach(function(thisCell) {
-      thisCell.sRow = grid.sRows[thisCell.sRow];
-      thisCell.sColumn = grid.sColumns[thisCell.sColumn];
-      thisCell.sBox = grid.sBoxes[thisCell.sBox];
-    });
+      thisCell.sRow = this.sRows[thisCell.sRow];
+      thisCell.sColumn = this.sColumns[thisCell.sColumn];
+      thisCell.sBox = this.sBoxes[thisCell.sBox];
+    }, this);
 
     /*GRID METHODS************/
 
@@ -115,7 +115,7 @@ $(document).ready(function() {
     Will inform all cells in the group to remove 'value" from their list
     of possible values*/
     this.removeAllPossibles = function(value) {
-      sCells.forEach(function(thisCell) {
+      this.sCells.forEach(function(thisCell) {
         thisCell.removePossible(value);
       });
     };
@@ -125,6 +125,7 @@ $(document).ready(function() {
     Useful for solving puzzle, specifically finding a cell that can be 
     the only remaining holder a certain possible value*/
     this.getAllPossibles = function() {
+      var cellsInGroup = this.sCells;
       var allPossibles = {
         '1': [],
         '2': [],
@@ -137,13 +138,17 @@ $(document).ready(function() {
         '9': []
       };
 
-      for (var value in allPossibles) {
-        sCells.forEach(function(thisCell) {
-          if (_.containts(thisCell.possibles, value)) {
-            allPossibles[value].push(thisCell);
+      //for each possible value in 'allPossibles'...
+      _.each(allPossibles, function(possCellsArr, possValue) {
+        //for each cell in the group...
+        _.each(cellsInGroup, function(thisCell) {
+          //if the cell has the current possible value in its known possible values...
+          if (_.contains(thisCell.possibles, possValue)) {
+            //at the cell to the list of possible cells for that value
+            possCellsArr.push(thisCell);
           }
         });
-      }
+      });
 
       return allPossibles;
     };
@@ -151,28 +156,28 @@ $(document).ready(function() {
   }
 
   /*ROWS**********************/
-  function SRow(num) {
+  function SRow(num, parentGrid) {
     var myCells = [];
     for (var i = 0; i < 9; i++) {
-      myCells.push(grid.sCells[num+i]);
+      myCells.push(parentGrid.sCells[num+i]);
     }
     return new SGroup(myCells);
   }
   /*COLUMNS*******************/
-  function SColumn(num) {
+  function SColumn(num, parentGrid) {
     var myCells = [];
     for(var i = 0; i < 9; i++) {
-      myCells.push(grid.sCells[num + 9*i]);
+      myCells.push(parentGrid.sCells[num + 9*i]);
     }
     return new SGroup(myCells);
   }
   /*BOXES*********************/
-  function SBox(num) {
+  function SBox(num, parentGrid) {
     var myCells = [];
     var firstCell = 9 * Math.floor(num/3) + 3 * num%3;
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
-        myCells.push(grid.sCells[firstCell + 9*i + j]);
+        myCells.push(parentGrid.sCells[firstCell + 9*i + j]);
       } 
     }
     return new SGroup(myCells);
@@ -260,5 +265,10 @@ $(document).ready(function() {
       }
     }
   };
+
+  /****************************
+  Event listeners
+  ****************************/
+  $("#solve").click(grid.solve());
 
 });
