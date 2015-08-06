@@ -96,6 +96,8 @@ Puzzle Board
 .square {
 	background: white;
 	border: 1px solid black;
+	padding: 0;
+	margin: 0;
 	display: inline-block;
 	height: 48px;
 	width: 48px;
