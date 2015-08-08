@@ -124,7 +124,6 @@ $(document).ready(function() {
     Useful for solving puzzle, specifically finding a cell that can be 
     the only remaining holder a certain possible value*/
     this.getAllPossibles = function() {
-      debugger;
       var cellsInGroup = this.sCells;
       var allPossibles = {
         '1': [],
@@ -175,7 +174,6 @@ $(document).ready(function() {
   function SBox(num, parentGrid) {
     var myCells = [];
     var firstCell = 27 * Math.floor(num/3) + 3 * (num%3);
-    console.log(firstCell);
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
         myCells.push(parentGrid.sCells[firstCell + 9*i + j]);
@@ -186,18 +184,9 @@ $(document).ready(function() {
 
 
   /****************************
-  Initiallizing and Listening
+  Initiallizing
   ****************************/
   grid = new SGrid();
-
-  /*reportInput() will be called from within the board event listener.
-  It calls the the .setValue() of a cell after its corresponding html element
-  has be modified.*/
-  var reportInput = function() {
-    grid.sCells[$(this).attr("id")].setValue(Number($(this).val()));
-  };
-  /*Listen for any input in a sudoku square*/
-  $(".board").on("keyup", "input", reportInput);
 
   /****************************
   Actual Solving
@@ -272,6 +261,16 @@ $(document).ready(function() {
   /****************************
   Event listeners
   ****************************/
-  $("#solve").click(grid.solve.bind(grid));
+  var reportInput = function(jSquare) {
+    if (jSquare.val()) {
+      grid.sCells[jSquare.attr("id")].setValue(Number(jSquare.val()));
+    }
+  };
+
+  $("#solve").click(function() {
+    for (var i = 0; i < 81; i++) {
+      reportInput($('#'+i));
+    }
+    grid.solve.bind(grid)();});
 
 });
