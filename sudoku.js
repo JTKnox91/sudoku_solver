@@ -69,9 +69,9 @@ $(document).ready(function() {
     has been solved, and other cells in the groups should remove that value
     from their possibilties.*/
     this.alertGroups = function(value) {
-      this.sRow.removeAllPossibles();
-      this.sColumn.removeAllPossibles();
-      this.sBox.removeAllPossibles();
+      this.sRow.removeAllPossibles(value);
+      this.sColumn.removeAllPossibles(value);
+      this.sBox.removeAllPossibles(value);
     };
 
     /*setValue() gives this cell a solved value, removes all possibles from
@@ -102,7 +102,6 @@ $(document).ready(function() {
     }
   }
 
-
   /****************************
   Sudoku Group Objects
   ****************************/
@@ -125,6 +124,7 @@ $(document).ready(function() {
     Useful for solving puzzle, specifically finding a cell that can be 
     the only remaining holder a certain possible value*/
     this.getAllPossibles = function() {
+      debugger;
       var cellsInGroup = this.sCells;
       var allPossibles = {
         '1': [],
@@ -143,7 +143,7 @@ $(document).ready(function() {
         //for each cell in the group...
         _.each(cellsInGroup, function(thisCell) {
           //if the cell has the current possible value in its known possible values...
-          if (_.contains(thisCell.possibles, possValue)) {
+          if (_.contains(thisCell.possibles, Number(possValue))) {
             //at the cell to the list of possible cells for that value
             possCellsArr.push(thisCell);
           }
@@ -159,7 +159,7 @@ $(document).ready(function() {
   function SRow(num, parentGrid) {
     var myCells = [];
     for (var i = 0; i < 9; i++) {
-      myCells.push(parentGrid.sCells[num+i]);
+      myCells.push(parentGrid.sCells[(num * 9) +i]);
     }
     return new SGroup(myCells);
   }
@@ -174,7 +174,8 @@ $(document).ready(function() {
   /*BOXES*********************/
   function SBox(num, parentGrid) {
     var myCells = [];
-    var firstCell = 9 * Math.floor(num/3) + 3 * num%3;
+    var firstCell = 27 * Math.floor(num/3) + 3 * (num%3);
+    console.log(firstCell);
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
         myCells.push(parentGrid.sCells[firstCell + 9*i + j]);
@@ -187,13 +188,13 @@ $(document).ready(function() {
   /****************************
   Initiallizing and Listening
   ****************************/
-  var grid = new SGrid();
+  grid = new SGrid();
 
   /*reportInput() will be called from within the board event listener.
   It calls the the .setValue() of a cell after its corresponding html element
   has be modified.*/
   var reportInput = function() {
-    grid.sCells[$(this).attr("id")].setValue($(this).val());
+    grid.sCells[$(this).attr("id")].setValue(Number($(this).val()));
   };
   /*Listen for any input in a sudoku square*/
   $(".board").on("keyup", "input", reportInput);
@@ -214,7 +215,7 @@ $(document).ready(function() {
         //become solved at that value.
         thisCell.setValue(thisCell.possibles[0]);
       }
-    });
+    }, this);
   };
 
   /*ONLY ONE POSSIBILITY IN GROUP*/
@@ -232,7 +233,7 @@ $(document).ready(function() {
           possibles[value][0].setValue(value);
         }
       }
-    });
+    }, this);
   };
 
   /*OVERLAPPING PARENTS FOR ONE TYPE OF POSSIBLE*/
@@ -248,12 +249,14 @@ $(document).ready(function() {
     //note the recursive calls, they are there to avoid running the expensive solving methods more than needed
     this.onlyPossInCell();
     if (this.hasChanged) {
+      this.hasChanged = false;
       this.updateBoard();
-      
+      this.solve();
     }
     else {
       this.onlyPossInGroup();
       if (this.hasChanged) {
+        this.hasChanged = false;
         this.updateBoard();
         this.solve();
       }
@@ -269,6 +272,6 @@ $(document).ready(function() {
   /****************************
   Event listeners
   ****************************/
-  $("#solve").click(grid.solve());
+  $("#solve").click(grid.solve.bind(grid));
 
 });
